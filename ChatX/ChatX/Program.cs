@@ -10,7 +10,14 @@ namespace ChatX
     {
         static void Main(string[] args)
         {
-            string Fuck = "Poland";
+            //You cannot use Poland as a verb...
+            string fuck = "Poland";
+
+            //.. observe
+            Console.WriteLine("I really like to {0}", fuck);
+            Console.ReadLine();
+            Console.WriteLine("doesn't really work, does it?");
+            Console.ReadLine();
         }
     }
 }
