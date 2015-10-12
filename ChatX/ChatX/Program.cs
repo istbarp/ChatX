@@ -18,6 +18,8 @@ namespace ChatX
             Console.ReadLine();
             Console.WriteLine("doesn't really work, does it?");
             Console.ReadLine();
+            Console.WriteLine("This program has been brought to you by Danish Nationalists and Racists");
+            Console.ReadLine();
         }
     }
 }
