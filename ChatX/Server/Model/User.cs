@@ -8,8 +8,6 @@ namespace Server
 {
     public class User
     {
-        private string userName;
-        private string password;
 
         public User()
         {
@@ -18,20 +16,12 @@ namespace Server
 
         public User(string userName, string password)
         {
-            this.userName = userName;
-            this.password = password;
+            Password = password;
+            UserName = userName;
         }
 
-        public string UserName
-        {
-            get { return userName; }
-            set { userName = value; }
-        }
+        public string UserName { get; set; }
 
-        public string Password
-        {
-            get { return password; }
-            set { password = value; }
-        }
+        public string Password { get; set; }
     }
 }

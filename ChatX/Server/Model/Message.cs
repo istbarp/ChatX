@@ -8,10 +8,6 @@ namespace Server
 {
     public class Message
     {
-        private string text;
-        private User sender;
-        private int roomID;
-
         public Message()
         {
 
@@ -19,27 +15,15 @@ namespace Server
 
         public Message(string text, User sender, int roomID)
         {
-            this.text = text;
-            this.sender = sender;
-            this.roomID = roomID;
+            Text = text;
+            Sender = sender;
+            RoomID = roomID;
         }
 
-        public string Text 
-        {
-            get { return text; }
-            set { text = value; }
-        }
+        public string Text { get; set; }
 
-        public User Sender
-        {
-            get { return sender; }
-            set { sender = value; }
-        }
+        public User Sender { get; set; }
 
-        public int RoomID
-        {
-            get { return roomID; }
-            set { roomID = value; }
-        }
+        public int RoomID { get; set; }
     }
 }
