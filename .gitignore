@@ -73,7 +73,6 @@ obj/
 *.svd
 *.userprefs
 *.pidb
-*.suo
 *.user
 *.unityproj
 *.booproj
