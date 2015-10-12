@@ -10,6 +10,7 @@ namespace ChatX
     {
         static void Main(string[] args)
         {
+            string Fuck = "Poland";
         }
     }
 }
