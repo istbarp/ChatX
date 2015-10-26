@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatX
+namespace ChatX.Interfaces
 {
-    class Program
+    interface IMessage
     {
-        static void Main(string[] args)
-        {
-
-        }
     }
 }
