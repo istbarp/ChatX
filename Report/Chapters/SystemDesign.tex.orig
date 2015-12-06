@@ -1,0 +1,123 @@
+\chapter{System Design}
+Parking ads is an application intended for web clients and mobile clients. the application will be able to tell its users where they can park their cars. When the app has retrieved some data about the users current location it will construct an email with a map, closest parking locations and ads, and then send an email to the user with the parking information.
+
+One of the requirements of the project is that it must be able to handle 1000 requests per minute and that it is only allowed to contact the service that keeps track of the parking locations and how much available space they have once per minute. 
+
+There was a suggested architecture which the team believed was very reasonable and well made, so no changes were made and was used.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{"img/Intial architecture"}
+\caption{}
+\label{fig:Intialarchitecture}
+\end{figure}
+
+The team is going to create a server that contacts four different services in order to create the Parking Ad application. The first service that is being contacted is the parking service that keeps track on parking information around Aalborg, which is created by Olsen Engineering. Unfortunately the team had difficulty connecting to the service as the password the team was given wasn't accepted. Instead the team decided to get the data of the parking service from UCN's parking ad example, which gets its data from Olsen Engineering's parking service. For the email service that will be needed to send emails it was decided to use Google's gmail service, the only downside to it is that for some reason whenever a user recieves an email from the Parking Ads application, it is being seen as a dangerous email that might be harmful to users despite that it isn't, other than that problem the service works well. For the third service we would need a ads service to be able to embed ads into emails when the email would be sent to the user, at first the team experimented with using google ads. However there were difficulties with embedding the ads to the emails. So the team decided to create our own ads service instead and it works. The fourth and last service needed before the application is a service that can provide a map, for this purpose Google maps was used. 
+
+For the programming language, C\# was chosen since that is what each team member was the most experienced in and agreed
+that it would make the most sense to work with, the team would be able to create the application faster by using C\#.
+\section{4 + 1 architectural view model}
+The 4+1 is a model designed for describing the architecture of software and looking at software from different perspective to make sure that the architecture is well made before beginning programming.
+
+\subsection{Logical view}
+The logical view deals with the functionality a system can provide for its end users. There are a few ways this can be represented, for this a layer diagram has been chosen.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{"img/Layer Diagram"}
+\caption{}
+\label{fig:LayerDiagram}
+\end{figure}
+
+Starting from the Server layer, this is the core of Parking Ads system. It collects all the data required to find out if there are parking spots available, calculate where the nearest spot is for the user, creating a map so that the user can read it, adding an add to that email, and lastly send it out the user. Our web service gets all that information and some functionality from other web services. The client is fairly simple, the server is hosted as a website so in this scenario any user that has a browser will be able to access it and the only thing the user has to do is give input on where s/he is via GPS to find the nearest parking location, and a email to give a map over the parking location.
+
+\subsection{Development view}
+
+The development view looks at a application from a developers point of view, meaning it puts focus on what functionality a program can provide and how it is structured. For this a package diagram has been chosen.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{"img/Large Scale Package Diagram"}
+\caption{}
+\label{fig:LargeScalePackageDiagram}
+\end{figure}
+
+It is a fairly simple diagram because the Parking Ads application is heavily dependent on it's service agents working, if even one should fail then the entire system would suffer from it. The application then puts all the data gathered into PService, and creates the needed functionality. And lastly there is the presentation layer which then allows a user to make use of PService's functionality. 
+
+
+\subsection{Process view}
+The process view works with how a piece of software behaves during runtime, an ideal way to visualize this is to use a activity diagram.
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{"img/Activity Diagram"}
+\caption{}
+\label{fig:ActivityDiagram}
+\end{figure}
+
+Starting from the top, the only thing it can do is send a email with parking information, a map, and ads when a user requests one. So when a request is being made, first the application will try to establish a connection to the parking service, afterwards it will contact the map service needed to provide a map, then it will fetch ads from the ads service. At any time contacting these services an exception could happen since it we have no control over the services and it's all connected via the internet. However, once the application has gone through all those steps successfully, all the information collected is then used to construct an email and then the email service will be contacted which is the last time error handling has to be taken into account, if the program succeeds in contacting the email service and sending the email out to the user it is then done with its activity. Now thanks to this activity diagram the team knows where error handling should be done.
+
+\subsection{Physical view}
+
+The physical view deals with what hardware components a software system needs in order to run properly, and how the hardware components are connected to each other. A good way to represent this is to use Deployment Diagrams.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{"img/Deployment Diagram"}
+\caption{}
+\label{fig:DeploymentDiagram}
+\end{figure}
+
+The parking Ads system itself consists of three hardware components, the server where the system is running, and the two clients which allows users to make use of it. In this case the client is a browser so anything that has internet access and a browser can use it. However, if we look more into the web services that Parking Ads uses we don't actually know how their deployment diagrams might look like (with the exception of the ads service since it has been developed by us), meaning we don't know what hardware pieces they use, and Parking Ads is heavily dependent on them. If for whatever reason the external web services should crash or shut down permanently then Parking Ads will not work either. Internet is also required in order for the system to function, the deployment diagram shows how every single hardware component is connected via some internet connection. In future versions of Parking Systems it would be a possibility to add more Parking Services and then split the application into different by what parking service it has, and then users would be redirected to different servers depending on where they are looking for a parking location.
+
+\subsection{Scenarios}
+
+To solve the requirement of the parking service only being allowed to call for it once every minute, the team considered various methods as to how work around the 1 minute limit on the parking service. One solution was to use a database and store the data and use it from there if a user wants to use the system and the 1 minute limit hasn't passed yet but considering how little data the service provides it didn't seem feasible to use a database. Another solution was to simply store the data in RAM, however in case of a crash no one would be able to use the system until the full minute had gone by. In the end serialization was used to over come this hurdle, the data gets serialized into a file and if the 1 minute limit hasn't passed yet, the application will read the stored data from the file instead.
+
+<<<<<<< HEAD
+The other requirement in mind is that the server has to be able to handle 1000 users a minute. To meet this requirement it would be a good idea to look into concurrency and make use of asynchronous calls.
+=======
+The team is going to create a server that contacts four different services in order to create the Parking Ad application. The first service that is being contacted is the parking service that keeps track on parking information around Aalborg, which is created by Olsen Engineering. Unfortunately the team had difficulty connecting to the service as the password the team was given wasn't accepted, so instead the team decided to get the data of the parking service from UCN's parking ad example, which gets its data from Olsen Engineering's parking service. For the email service that will be needed to send emails it was decided to use Google's gmail service, the only downside to it is that for some reason whenever a user receives an email from the Parking Ads application, it is being seen as a dangerous email that might be harmful to users despite that it isn't, other than that problem the service works well. For the third service we would need a ads service to be able to embed ads into emails when the email would be sent to the user, at first the team experimented with using google ads. However there were difficulties with embedding the ads to the emails. So the team decided to create our own ads service instead and it works. The fourth and last service needed before the application is a service that can provide a map, for this purpose Google maps was used. 
+>>>>>>> 727fcce3959b093f14001404bcec07f5ffea5895
+
+Unfortunately the group didn't manage to make use cases, however testing the functional requirements mentioned above would be prime candidates for testing. Testing for usability would also be ideal to make sure users will rarely ever have issues with the application.
+
+\section{FURPS}
+FURPS is a architect checklist, it is good to look at each element of FURPS to know what areas need to be focused on.
+
+\subsection{Functionality}Functionality deals with what requirements the customer has set on for the project. So a good question to ask is, what problem is this Parking app going to solve? And with this app, any user that is looking for a spot to park their car will be able to find one.
+
+\subsection{Usability}Usability is about how accessible is Parking app to the users of it. Is it easy to use? Is the GUI design intuitive? A good way to check if the users like the aesthetics of the application would be to prepare usability tests, and perhaps even alpha/beta tests as they can give crucial feedback on this very topic.
+
+\subsection{Reliability}Reliability works with how reliable the system should be, meaning how much downtime can it handle? are failures predictable? how is the system going to 
+recover in case of failure? In the case of this system, it is heavily relying on a internet connection to be able to connect to the services, meaning if for whatever reason the server should loose it's internet connection the entire system goes down. There's also the services themselves to consider, if just one of them goes down, then the program also cannot be used as each service plays an important role. Lastly the application also works with time sensitive data, meaning it is important that the data from the Parking Service is up to date and only a few minutes old at best, any older than that and it is completely unreliable and cannot give accurate data on parking locations in Aalborg.
+
+\subsection{Performance}Performance is about how fast an application must be, what the absolute highest respond time is allowed and how much memory is needed. Parking App has 2 requirements when it comes to performance, the first one is to only call the parking service once per minute. The second is that it must be able to handle at least 1000 users every minute. The requirements demand that the system has to be able to handle a large amount of users, therefor a good idea would be to do stress testing and take a look at the scalability cube to make sure that Parking app can handle the requirements. Another thing to consider is also the respond time, parking app will be of no use if it takes too long to send a email before a user receives it.
+
+\subsection{Supportability}Supportability, the last of the FURPS principle. Looks at how maintainable an application after it is deployed, also looks at easy it is to install and configure. Because of how Parking app is going to be developed the installation part only needs to be worried about on the server side, the client will easily be able to use it by simple going to the website URL. Maintenance of the code is different matter however, since it is so heavily dependent on the service functioning for the application to even work it will be important to keep a watch on each service once deployed and figure out what to do in case one of the services gets shut down permanently.
+
+\section{Scalability}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/ScalabilityCube}
+	\caption{}
+	\label{fig:ScalabilityCube}
+\end{figure}
+
+The scalability cube is used to determine in what should be done to a application in order to make it scalable and be able to handle a large amount of users. There are 3 axis' X, Y and Z. 
+
+On the X axis, programs scale running multiple copies of the exact code behind a load balancer.
+
+On the Y axis, programs scale by doing single use services like for example checkout on a web shop. 
+
+On the Z axis, scaling is similar to the X axis, but instead each server runs an identical copy of the code but is responsible for different subsets of data.
+
+\subsection{Our Solution}
+When it comes to scaling our solution, there are different services that we contact, which is what is seen on the Y Axis on the cube. Using services to spread out tasks makes our service easily scalable on multiple servers which is on the X axis on the cube because we can easily run that part on different servers behind a load balancer. We've also done parallel loops which means our parking service will scale with bigger servers with more cores and threads.
+
+
+
+
+
+
+
