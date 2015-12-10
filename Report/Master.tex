@@ -1,0 +1,43 @@
+\documentclass[a4paper,12pt]{report}
+% Packages
+\input{Config/Packages}
+% Macros/Commands
+\input{Config/Macros}
+% Paper Style
+\input{Config/Styles}
+
+% Document start
+
+\title{Large Scale Development: Parking App}
+\author{Anders Munkgaard, Jackie Engberg Christensen, Michael Dolatko, Patrick Petersen}
+\date{\today}
+\begin{document}
+
+\begin{titlepage}
+%\doublespacing
+\centering
+{\LARGE System Integration: ChatX}
+\begin{figure}[H]
+\centering
+%\includegraphics[width=0.75\linewidth]{img/Front}
+\end{figure}
+
+{\large Anders Munkgaard, Jackie Engberg Christensen, Michael Dolatko, Patrick Petersen\linebreak \today}
+\end{titlepage}
+
+\input{Chapters/Titelblad}
+\tableofcontents
+\input{Chapters/Overview}
+\input{Chapters/Introduction}
+\input{Chapters/Process}
+\input{Chapters/SystemDesign}
+\input{Chapters/Implementation}
+\input{Chapters/Test}
+\input{Chapters/Conclusion}
+
+\newpage
+\bibliographystyle{unsrt}
+\bibliography{Chapters/Bibliography}
+\input{Chapters/Apendix}
+
+\end{document}
