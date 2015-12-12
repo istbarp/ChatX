@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.ServiceModel;
 using System.Web;
 
 namespace Server
 {
-    [DataContract]
     public class Config
     {
-        [DataMember]
         public static readonly char SEPERATOR = '|';
 
-        [DataMember]
         public static readonly string[] CMD_FORMATS = {
              //{0} = calling Thread ID,     {1} = username,    {2} = roomName
             "JOIN_ROOM" + SEPERATOR + "{0}" + SEPERATOR + "{1}" + SEPERATOR + "{2}",
@@ -52,7 +48,6 @@ namespace Server
             "RELEASE_USERNAME" + SEPERATOR + "{0}" + SEPERATOR + "{1}" + SEPERATOR + "{2}"          
         };
 
-        [DataContract]
         public class CMD
         {
             /// <summary>
@@ -61,7 +56,6 @@ namespace Server
             /// <para> {1} = username    </para>
             /// <para> {2} = roomName </para>
             /// </summary>
-            [DataMember]
             public static readonly int JOIN_ROOM = 0;
 
             /// <summary>
@@ -69,7 +63,6 @@ namespace Server
             /// <para> {0} = requesting Thread ID  </para>
             /// <para> {1} = OK | [ERROR]    </para>
             /// </summary>
-            [DataMember]
             public static readonly int JOIN_ROOM_RESPONSE = 1;
 
             /// <summary>
@@ -78,7 +71,6 @@ namespace Server
             /// <para> {1} = username    </para>
             /// <para> {2} = roomName </para>
             /// </summary>
-            [DataMember]
             public static readonly int LEAVE_ROOM = 2;
 
             /// <summary>
@@ -86,7 +78,6 @@ namespace Server
             /// <para> {0} = requesting Thread ID  </para>
             /// <para> {1} = OK | [ERROR]    </para>
             /// </summary>
-            [DataMember]
             public static readonly int LEAVE_ROOM_RESPONSE = 3;
 
             /// <summary>
@@ -96,14 +87,12 @@ namespace Server
             /// <para> {2} = roomName </para>
             /// <para> {3} = message </para>
             /// </summary>
-            [DataMember]
             public static readonly int SEND_MESSAGE = 4;
 
             /// <summary>
             /// Parameters:
             /// <para> {0} = calling Thread ID  </para>
             /// </summary>
-            [DataMember]
             public static readonly int REQUEST_ROOMS = 5;
 
             /// <summary>
@@ -111,7 +100,6 @@ namespace Server
             /// <para> {0} = requesting Thread ID  </para>
             /// <para> {n} = any number of roomNames seperated by SEPERATOR  </para>
             /// </summary>
-            [DataMember]
             public static readonly int REQUEST_ROOMS_RESPONSE = 6;
 
             /// <summary>
@@ -119,7 +107,6 @@ namespace Server
             /// <para> {0} = requesting Thread ID  </para>
             /// <para> {1} = username  </para>
             /// </summary>
-            [DataMember]
             public static readonly int LOGIN_REQUEST = 7;
 
             /// <summary>
@@ -127,7 +114,6 @@ namespace Server
             /// <para> {0} = requesting Thread ID  </para>
             /// <para> {1} = OK | [ERROR]    </para>
             /// </summary>
-            [DataMember]
             public static readonly int LOGIN_RESPONSE = 8;
 
             /// <summary>
@@ -136,7 +122,6 @@ namespace Server
             /// <para> {0} = requesting Thread ID  </para>
             /// <para> {1} = OK | [ERROR]    </para>
             /// </summary>
-            [DataMember]
             public static readonly int VAL_USERNAME = 9;
 
             /// <summary>
@@ -145,14 +130,13 @@ namespace Server
             /// <para> {0} = requesting Thread ID  </para>
             /// <para> {1} = OK | [ERROR]    </para>
             /// </summary>
-            [DataMember]
             public static readonly int VAL_USERNAME_REPONSE = 10;
 
             /// <summary>
             /// <para> {0} = requesting Thread ID  </para>
-            /// <para> {1} = OK | [ERROR]    </para>
+            /// <para> {1} = username</para>
+            /// <para> {2} = OK | [ERROR]    </para>
             /// </summary>
-            [DataMember]
             public static readonly int RELEASE_USERNAME = 11;
         }
 

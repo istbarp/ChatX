@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="Controller\ServerController.cs" />
     <Compile Include="IServerMQ.cs" />
     <Compile Include="Model\Lobby.cs" />
