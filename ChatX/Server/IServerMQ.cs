@@ -11,7 +11,7 @@ namespace Server
     public interface IServerMQ
     {
         void SendToResponseQueue(string response);
-        void RecieveFromCommandQueue();
         event OnCommandRecieveDelegate OnCommandReceive;
+        void StartListening();
     }
 }

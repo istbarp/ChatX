@@ -9,19 +9,14 @@ namespace Server.Model
     public class User
     {
 
-        public User()
+        public User(string userName, string ip)
         {
-
-        }
-
-        public User(string userName, string password)
-        {
-            Password = password;
             UserName = userName;
+            IP = ip;
         }
 
         public string UserName { get; set; }
 
-        public string Password { get; set; }
+        public string IP { get; set; }
     }
 }

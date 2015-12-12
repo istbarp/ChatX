@@ -11,22 +11,26 @@ namespace Server
 {
     class ServerRabbitMQ : IServerMQ
     {
-        public ServerRabbitMQ(string hostName, string responseQueueName)
+        public ServerRabbitMQ(string localHostIP, string responseQueueName, string commandQueueName)
         {
-            HostName = hostName;
+            LocalHostIP = localHostIP;
             ResponseQueueName = responseQueueName;
+            CommandQueueName = commandQueueName;
 
             OnCommandReceive += (msg) => { };
-            
+
         }
 
         private readonly Encoding Q_MSG_ENC = Encoding.UTF8;
-        public string HostName { get; set; }
-        public string ResponseQueueName { get; set; }
+        public string LocalHostIP { get; set; }
+        public string ResponseQueueName { get; private set; }
+        public string CommandQueueName { get; private set; }
+
+        public event OnCommandRecieveDelegate OnCommandReceive;
 
         public void SendToResponseQueue(string response)
         {
-            ConnectionFactory factory = new ConnectionFactory() { HostName = HostName };
+            ConnectionFactory factory = new ConnectionFactory() { HostName = LocalHostIP };
             using (IConnection connection = factory.CreateConnection())
             {
                 using (IModel channel = connection.CreateModel())
@@ -47,12 +51,27 @@ namespace Server
             }
         }
 
-        public void RecieveFromCommandQueue()
+        public void StartListening()
         {
-            throw new NotImplementedException();
-        }
+            ConnectionFactory factory = new ConnectionFactory() { HostName = LocalHostIP };
+            using (IConnection connection = factory.CreateConnection())
+            {
+                using (IModel channel = connection.CreateModel())
+                {
+                    channel.QueueDeclare(queue: CommandQueueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
-        public event OnCommandRecieveDelegate OnCommandReceive;
- 
+                    EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
+                    consumer.Received += (model, ea) =>
+                        {
+                            byte[] body = ea.Body;
+                            string message = Q_MSG_ENC.GetString(body);
+                            OnCommandReceive(message);
+                        };
+                    channel.BasicConsume(queue: CommandQueueName,
+                                         noAck: true,
+                                         consumer: consumer);
+                }
+            }
+        }
     }
 }

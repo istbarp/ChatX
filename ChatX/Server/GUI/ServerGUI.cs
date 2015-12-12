@@ -23,7 +23,7 @@ namespace Server
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            sc.StartServer(txtServiceIP.Text);
+            sc.StartServer("localhost", txtServiceIP.Text);
         }
         
         private void btnStop_Click(object sender, EventArgs e)

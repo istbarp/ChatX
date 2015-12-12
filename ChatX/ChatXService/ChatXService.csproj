@@ -69,6 +69,7 @@
     <Compile Include="ChatXService.svc.cs">
       <DependentUpon>ChatXService.svc</DependentUpon>
     </Compile>
+    <Compile Include="Config.cs" />
     <Compile Include="IChatXService.cs" />
     <Compile Include="IMQDriver.cs" />
     <Compile Include="IServerDestributer.cs" />
