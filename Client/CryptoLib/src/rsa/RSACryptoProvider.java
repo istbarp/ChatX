@@ -1,14 +1,11 @@
 package rsa;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -16,11 +13,12 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
+import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.BadPaddingException;
@@ -33,17 +31,23 @@ public class RSACryptoProvider
 	private Key PrivateKey;
 	
 	private final String ALGORITHM = "RSA";
-	private final String CIPHERALGORITHM = "RSA";
-	private final String PATH = "C:/keys";
+	private final String CIPHERALGORITHM = "RSA/ECB/PKCS1Padding";
+	private final String PATH = "C:/keys.bin";
 	
-	public RSACryptoProvider()
+	public RSACryptoProvider() throws NoSuchAlgorithmException, InvalidKeySpecException, IOException
 	{
-		
+		if (!(new File(PATH).exists()))
+		{
+			GenerateKeyPair();
+			SaveKeys();
+		}
+		else
+		{
+			LoadKeys();
+		}
 	}
 	
-	public void GenerateKeyPair() throws 
-	    NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, 
-	    BadPaddingException, InvalidKeySpecException, FileNotFoundException, IOException, NoSuchProviderException 
+	private void GenerateKeyPair() throws NoSuchAlgorithmException
 	{
 		KeyPairGenerator generator;
 		generator = KeyPairGenerator.getInstance(ALGORITHM);
@@ -52,63 +56,107 @@ public class RSACryptoProvider
 		KeyPair pair = generator.generateKeyPair();
 		PublicKey = pair.getPublic();
 		PrivateKey = pair.getPrivate();
-		System.out.println(PrivateKey.toString());
-		SaveKeys();
 	}
 	
-	public byte[] Encrypt(String text) throws 
-	    NoSuchAlgorithmException, 
-	    NoSuchPaddingException, 
-	    InvalidKeyException, 
-	    IllegalBlockSizeException, 
-	    BadPaddingException, NoSuchProviderException 
+	public byte[] Encrypt(String text) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
 	{
-		Cipher cipher = Cipher.getInstance(ALGORITHM);
+		Cipher cipher = Cipher.getInstance(CIPHERALGORITHM);
 		cipher.init(Cipher.ENCRYPT_MODE, PublicKey);
 		return cipher.doFinal(text.getBytes());
 	}
 	
-	public String Decrypt(byte[] text)throws 
-	    NoSuchAlgorithmException, 
-	    NoSuchPaddingException, 
-	    InvalidKeyException, 
-	    IllegalBlockSizeException, 
-	    BadPaddingException, NoSuchProviderException 
+	public String Decrypt(byte[] text)throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException 
 	{
-		Cipher ciph = Cipher.getInstance(ALGORITHM);
+		Cipher ciph = Cipher.getInstance(CIPHERALGORITHM);
 		ciph.init(Cipher.DECRYPT_MODE, PrivateKey);
 		return new String(ciph.doFinal(text));
 	}
 	
-	private void SaveKeys() throws NoSuchAlgorithmException, InvalidKeySpecException, FileNotFoundException, IOException, NoSuchProviderException
+	private void SaveKeys() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
 	{
-		/*KeyFactory fact = KeyFactory.getInstance(ALGORITHM, "BC");
-		RSAPublicKeySpec pub = fact.getKeySpec(PublicKey, RSAPublicKeySpec.class);
-		RSAPublicKeySpec pri = fact.getKeySpec(PrivateKey, RSAPublicKeySpec.class);
-		RSAEncryptionDescription rsaObj = new RSAEncryptionDescription();  
-		rsaObj.saveKeys(PUBLIC_KEY_FILE, rsaPubKeySpec.getModulus(), rsaPubKeySpec.getPublicExponent());  
-		rsaObj.saveKeys(PRIVATE_KEY_FILE, rsaPrivKeySpec.getModulus(), rsaPrivKeySpec.getPrivateExponent());*/
+		BufferedWriter output = new BufferedWriter(new FileWriter(PATH));
+
+		RSAPrivateCrtKey keys = (RSAPrivateCrtKey)PrivateKey;
 		
-		
-		KeyFactory fact = KeyFactory.getInstance(ALGORITHM);
-		RSAPublicKeySpec pub = fact.getKeySpec(PublicKey, RSAPublicKeySpec.class);
-		RSAPrivateKeySpec pri = fact.getKeySpec(PrivateKey, RSAPrivateKeySpec.class);
-		ObjectOutputStream oout = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(PATH)));
-		oout.writeObject(pub.getModulus());
-		oout.writeObject(pub.getPublicExponent());
-		oout.writeObject(pri.getModulus());
-		oout.writeObject(pri.getPrivateExponent());
-		oout.close();
+		output.append(new String(Base64.getEncoder().encodeToString(keys.getModulus().toByteArray())));
+		output.append("\n");
+		output.append(new String(Base64.getEncoder().encodeToString(keys.getPublicExponent().toByteArray())));
+		output.append("\n");
+		output.append(new String(Base64.getEncoder().encodeToString(keys.getPrivateExponent().toByteArray())));
+		output.append("\n");
+		output.append(new String(Base64.getEncoder().encodeToString(keys.getPrimeP().toByteArray())));
+		output.append("\n");
+		output.append(new String(Base64.getEncoder().encodeToString(keys.getPrimeQ().toByteArray())));
+		output.append("\n");
+		output.append(new String(Base64.getEncoder().encodeToString(keys.getPrimeExponentP().toByteArray())));
+		output.append("\n");
+		output.append(new String(Base64.getEncoder().encodeToString(keys.getPrimeExponentQ().toByteArray())));
+		output.append("\n");
+		output.append(new String(Base64.getEncoder().encodeToString(keys.getCrtCoefficient().toByteArray())));
+		output.close();
 	}
 	
-	private void LoadKeys() throws NoSuchAlgorithmException, InvalidKeySpecException, FileNotFoundException, IOException, ClassNotFoundException, NoSuchProviderException
+	private void LoadKeys() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
 	{
+		BufferedReader input = new BufferedReader(new FileReader(PATH));
+		BigInteger modulus = new BigInteger(Base64.getDecoder().decode(input.readLine()));
+		
 		KeyFactory fact = KeyFactory.getInstance(ALGORITHM);
-		ObjectInputStream oin = new ObjectInputStream(new BufferedInputStream(new FileInputStream(PATH)));
-		RSAPublicKeySpec pub = new RSAPublicKeySpec((BigInteger)oin.readObject(), (BigInteger)oin.readObject());
-		RSAPrivateKeySpec pri = new RSAPrivateKeySpec((BigInteger)oin.readObject(), (BigInteger)oin.readObject());
+		RSAPublicKeySpec pub = new RSAPublicKeySpec(modulus, new BigInteger(Base64.getDecoder().decode(input.readLine())));
+		RSAPrivateKeySpec pri = new RSAPrivateKeySpec(modulus, new BigInteger(Base64.getDecoder().decode(input.readLine())));
+
 		PublicKey = fact.generatePublic(pub);
 		PrivateKey = fact.generatePrivate(pri);
-		oin.close();
+		
+		input.close();
+	}
+	
+	private void SaveKeystoXML() throws IOException 
+	{
+		BufferedWriter output = new BufferedWriter(new FileWriter(PATH));
+
+	    RSAPrivateCrtKey privKey = (RSAPrivateCrtKey)PrivateKey;
+
+	    BigInteger n = privKey.getModulus();
+	    BigInteger e = privKey.getPublicExponent();
+	    BigInteger d = privKey.getPrivateExponent();
+	    BigInteger p = privKey.getPrimeP();
+	    BigInteger q = privKey.getPrimeQ();
+	    BigInteger dp = privKey.getPrimeExponentP();
+	    BigInteger dq = privKey.getPrimeExponentQ();
+	    BigInteger inverseQ = privKey.getCrtCoefficient(); 
+
+	    StringBuilder builder = new StringBuilder();
+	    builder.append("<RSAKeyValue>\n");
+	    write(builder, "Modulus", n);
+	    write(builder, "Exponent", e);
+	    write(builder, "P", p);
+	    write(builder, "Q", q);
+	    write(builder, "DP", dp);
+	    write(builder, "DQ", dq);
+	    write(builder, "InverseQ", inverseQ);
+	    write(builder, "D", d);
+	    builder.append("</RSAKeyValue>");
+	    
+	    output.append(builder.toString());
+	    output.flush();
+	    output.close();
+	    System.out.println(builder.toString());
+	}
+	
+	private void write(StringBuilder builder, String tag, BigInteger bigInt)
+	{
+	    builder.append("\t<");
+	    builder.append(tag);
+	    builder.append(">");
+	    builder.append(encode(bigInt));
+	    builder.append("</");
+	    builder.append(tag);
+	    builder.append(">\n");
+	}
+
+	private String encode(BigInteger bigInt)
+	{
+	    return new String(Base64.getEncoder().encodeToString(bigInt.toByteArray()));
 	}
 }
