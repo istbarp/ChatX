@@ -21,10 +21,9 @@ public class program {
 		
 		try {
 			RSACryptoProvider rsa = new RSACryptoProvider();
-			rsa.GenerateKeyPair();
 			byte[] data = rsa.Encrypt("Michael");
 			System.out.println(new String(data));
-			//System.out.println(rsa.Decrypt(data));
+			System.out.println(rsa.Decrypt(data));
 			
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
@@ -39,9 +38,6 @@ public class program {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (BadPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchProviderException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvalidKeySpecException e) {
