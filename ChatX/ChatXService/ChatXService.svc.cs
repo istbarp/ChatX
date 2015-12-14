@@ -7,6 +7,7 @@ using System.ServiceModel.Web;
 using System.Text;
 using RabbitMQ.Client;
 using System.Threading;
+using System.Web;
 
 namespace ChatXService
 {
@@ -134,10 +135,16 @@ namespace ChatXService
 
         public string Login(string username)
         {
-            IMQDriver mqDriver = GetMQDriver();
+            //TODO make mqDriver into mqDriver for all servers
+
+            IServerDestributer serverDist = new LocalServerDestributer();
+
+            string reqServer = serverDist.RequestServer();
+            IMQDriver mqDriver = serverDist.GetMQDriver(reqServer);
             LockUsername(username, mqDriver);
 
-            string command = Config.GenerateCommand(Config.CMD.LOGIN_REQUEST, Thread.CurrentThread.ManagedThreadId, username);
+            //TODO make mqDriver into single server mqDriver
+            string command = Config.GenerateCommand(Config.CMD.LOGIN_REQUEST, Thread.CurrentThread.ManagedThreadId, username, reqServer, GetClientIP());
             
             bool serverResponded = false;
 
@@ -230,6 +237,11 @@ namespace ChatXService
                 Thread.Sleep(500);
                 waitedTime += 500;
             }
+        }
+
+        private string GetClientIP()
+        {
+            return HttpContext.Current.Request.UserHostAddress;
         }
     }
 }
