@@ -29,8 +29,20 @@ The java client has been written as the first client and will be used as the tes
 
 The web client will be what caters to most people since it's a thing that can be used on all platforms, such as phones, pc's, and even consoles. It will be the most difficult to make as well since it requires AJAX (Update a website without reloading).
 
+\section{Cryptography}
+
+To make the communication secure the clients implements an RSA encryption to encrypt all messages sent. RSA is a Public- Private key (asymmetric) encryption algorithm
+
+\begin{equation}
+C=M^e mod(n) | Where M < n
+\end{equation}
+
+\begin{equation}
+M=C^d mod(n)
+\end{equation}
+
 \section{Server}
 
-\subsection{Webservice}
+\section{Webservice}
 
 \section{RabbitMQ}
