@@ -13,11 +13,16 @@ namespace Server.Controller
         private static ServerController instance;
         private IServerMQ queueManager;
         private Dictionary<User, IList<Room>> userRoom;
+        private List<Room> allRooms;
+        private List<User> allUsers;
+        private List<User> lockedUsers;
 
         private readonly string RES_Q_NAME = "Reponse Queue";
 
         private ServerController()
         {
+            allRooms = new List<Room>();
+            allUsers = new List<User>();
             userRoom = new Dictionary<User,IList<Room>>();
         }
 
@@ -76,13 +81,15 @@ namespace Server.Controller
         {
             string id;
             string userName;
-            string okOrError;
 
             string[] cmd_parts = command.Split(Config.SEPERATOR);
 
             id = cmd_parts[0];
             userName = cmd_parts[1];
-            okOrError = cmd_parts[2];
+
+            User user = new User(userName);
+
+            lockedUsers.Remove(user);
         }
 
         private void VerifyAndLockUsername(string command)
@@ -96,8 +103,25 @@ namespace Server.Controller
 
             id = cmd_parts[0];
             userName = cmd_parts[1];
+
+            User cmdUser = new User(userName);
+
+            if (lockedUsers.Contains(cmdUser) || allUsers.Contains(cmdUser))
+            {
+                response = "EXISTS";
+            }
+            else
+            {
+                lockedUsers.Add(cmdUser);
+                response = "OK"; 
+            }
+
+            string cmdResp = Config.GenerateCommand(Config.CMD.VAL_USERNAME_REPONSE, id, response);
+
+            queueManager.SendToResponseQueue(cmdResp);
         }
 
+        //TO DO:Socket
         private void LoginRequest(string command)
         {
             string id;
@@ -182,12 +206,31 @@ namespace Server.Controller
             string userName;
             string roomName;
 
+            string response;
+
             string[] cmd_parts = command.Split(Config.SEPERATOR);
 
             id = cmd_parts[0];
             userName = cmd_parts[1];
             roomName = cmd_parts[2];
 
+            User user = new User(userName);
+            Room room = new Room(roomName);
+
+            user = allUsers[allUsers.IndexOf(user)];
+
+            if (allRooms.Contains(room))
+            {
+                room = allRooms[allRooms.IndexOf(room)];
+            }
+            else
+            {
+                allRooms.Add(room);
+            }
+            room.Users.Add(user);
+
+            response = Config.GenerateCommand(Config.CMD.JOIN_ROOM_RESPONSE, id, "OK");
+            queueManager.SendToResponseQueue(response);
         }
 
         public void StopServer()
