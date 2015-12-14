@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.ChatSocket;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,6 @@ namespace Server.Model
 {
     public class User
     {
-
         public User(string userName, string ip)
         {
             UserName = userName;
@@ -23,6 +23,8 @@ namespace Server.Model
         public string UserName { get; set; }
 
         public string IP { get; set; }
+
+        public IChatConnection ChatConnection { get; set; }
 
         public override bool Equals(object obj)
         {

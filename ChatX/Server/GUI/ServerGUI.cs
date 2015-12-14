@@ -19,11 +19,31 @@ namespace Server
         {
             InitializeComponent();
             sc = ServerController.GetInstance();
+
+            ChatSocket.ConnectionManager.GetInstance().OnMessageSend += (msg) =>
+            {
+                WriteLine(msg);
+            };
+        }
+
+        private void WriteLine(string msg)
+        {
+            if (txtIO.InvokeRequired)
+            {
+                Action<string> thisMethod = WriteLine;
+
+                txtIO.Invoke(thisMethod, msg);
+            }
+            else
+            {
+                txtIO.Text += "\n " + msg;
+            }
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
             sc.StartServer("localhost", txtServiceIP.Text);
+            txtIO.Text += "\n Server Started!";
         }
         
         private void btnStop_Click(object sender, EventArgs e)

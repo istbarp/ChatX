@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Server.Model;
 using System.Net;
+using Server.ChatSocket;
 
 namespace Server.Controller
 {
@@ -12,10 +13,12 @@ namespace Server.Controller
     {
         private static ServerController instance;
         private IServerMQ queueManager;
-        private Dictionary<User, IList<Room>> userRoom;
+        private Dictionary<User, IList<Room>> userRooms;
         private List<Room> allRooms;
         private List<User> allUsers;
         private List<User> lockedUsers;
+
+        private Room lobby;
 
         private readonly string RES_Q_NAME = "Reponse Queue";
 
@@ -23,7 +26,12 @@ namespace Server.Controller
         {
             allRooms = new List<Room>();
             allUsers = new List<User>();
-            userRoom = new Dictionary<User,IList<Room>>();
+            userRooms = new Dictionary<User,IList<Room>>();
+            lockedUsers = new List<User>();
+
+            lobby = new Room("Lobby");
+
+            allRooms.Add(lobby);
         }
 
         public static ServerController GetInstance()
@@ -121,7 +129,7 @@ namespace Server.Controller
             queueManager.SendToResponseQueue(cmdResp);
         }
 
-        //TO DO:Socket
+        //TO DO:ChatSocket
         private void LoginRequest(string command)
         {
             string id;
@@ -144,23 +152,19 @@ namespace Server.Controller
 
                 //TODO: Open socket so user can connect.
 
-                //* Send LOGIN_RESPONSE message to response Q.
+                ConnectionManager conMan = ConnectionManager.GetInstance();
+                IChatConnection chatCon = conMan.Listen(clientIP);
+
+                user.ChatConnection = chatCon;
+
+                IList<Room> defaultRooms = new List<Room>();
+                defaultRooms.Add(lobby);
+
+                userRooms.Add(user, defaultRooms);
 
                 message = Config.GenerateCommand(Config.CMD.LOGIN_RESPONSE, id, "OK");
                 queueManager.SendToResponseQueue(message);
-
-                //TODO: When a user connects on socket, check the RemoteIP against user.IP
-
-
-                //* If they match add to some dictionary (or user itself)
-                //* Send RELEASE_USERNAME message to response Q.
-
-                message = Config.GenerateCommand(Config.CMD.RELEASE_USERNAME, id, "OK");
-                queueManager.SendToResponseQueue(message);
-
-                userRoom.Add(user, null);
             }
-
         }
 
         private void RequestRooms(string command)
@@ -170,6 +174,16 @@ namespace Server.Controller
             string[] cmd_parts = command.Split(Config.SEPERATOR);
 
             id = cmd_parts[0];
+
+            string respVal = "";
+
+            for (int i = 0; i < allRooms.Count; i++)
+            {
+                respVal += Config.SEPERATOR + allRooms[i].RoomName;
+            }
+
+            string response = Config.GenerateCommand(Config.CMD.REQUEST_ROOMS_RESPONSE, id, respVal);
+            queueManager.SendToResponseQueue(response);
         }
 
         private void SendMessage(string command)
@@ -184,7 +198,26 @@ namespace Server.Controller
             id = cmd_parts[0];
             userName = cmd_parts[1];
             roomName = cmd_parts[2];
-            message = cmd_parts[3];
+
+            int paramLength = userName.Length + roomName.Length + id.Length + 3;
+            message = command.Substring(0, paramLength);
+
+            User sender = allUsers[allUsers.IndexOf(new User(userName))];
+
+            Room[] rooms = userRooms[sender].ToArray();
+
+            foreach (Room room in rooms)
+            {
+                foreach (User roomUser in room.Users)
+                {
+                    IChatConnection chatCon = roomUser.ChatConnection;
+                    if (chatCon != null)
+                    {
+                        string chatMsg = String.Format("{0}|{1}:{2}", roomName, userName, message);
+                        chatCon.SendMessage(chatMsg);
+                    }
+                }
+            }
         }
 
         private void LeaveRoom(string command)

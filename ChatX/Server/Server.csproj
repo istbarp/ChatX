@@ -47,6 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatSocket\ChatConnection.cs" />
+    <Compile Include="ChatSocket\ConnectionManager.cs" />
+    <Compile Include="ChatSocket\IChatConnection.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Controller\ServerController.cs" />
     <Compile Include="IServerMQ.cs" />

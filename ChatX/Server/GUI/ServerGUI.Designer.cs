@@ -60,6 +60,7 @@
             this.txtIO.Location = new System.Drawing.Point(12, 12);
             this.txtIO.Multiline = true;
             this.txtIO.Name = "txtIO";
+            this.txtIO.ReadOnly = true;
             this.txtIO.Size = new System.Drawing.Size(550, 369);
             this.txtIO.TabIndex = 2;
             // 
