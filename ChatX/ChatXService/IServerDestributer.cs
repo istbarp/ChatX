@@ -10,6 +10,7 @@ namespace ChatXService
     {
         bool CreateUser(string username);
         string RequestServer();
+        string[] GetAllServers();
         IMQDriver GetMQDriver(string server);
         int GetServerCount();
     }

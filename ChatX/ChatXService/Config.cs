@@ -118,6 +118,8 @@ namespace ChatXService
             /// Parameters:
             /// <para> {0} = requesting Thread ID  </para>
             /// <para> {1} = username  </para>
+            /// <para> {2} = Socket server IP</para>
+            /// <para> {3} = Client IP</para>
             /// </summary>
             [DataMember]
             public static readonly int LOGIN_REQUEST = 7;
