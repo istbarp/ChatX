@@ -15,8 +15,20 @@ namespace Server.Model
             IP = ip;
         }
 
+        public User(string userName)
+        {
+            UserName = userName;
+        }
+
         public string UserName { get; set; }
 
         public string IP { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            User user = (User)obj;
+
+            return UserName.Equals(user.UserName);
+        }
     }
 }
