@@ -80,11 +80,5 @@ public class IChatXServiceProxy implements communicationPackage.IChatXService {
     return iChatXService.login(username);
   }
   
-  public configPackage.Config getConfig() throws java.rmi.RemoteException{
-    if (iChatXService == null)
-      _initIChatXServiceProxy();
-    return iChatXService.getConfig();
-  }
-  
   
 }

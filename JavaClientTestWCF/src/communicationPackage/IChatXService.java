@@ -14,5 +14,4 @@ public interface IChatXService extends java.rmi.Remote {
     public java.lang.String[] getRooms() throws java.rmi.RemoteException;
     public java.lang.String[] whoIs(java.lang.String roomName) throws java.rmi.RemoteException;
     public java.lang.String login(java.lang.String username) throws java.rmi.RemoteException;
-    public configPackage.Config getConfig() throws java.rmi.RemoteException;
 }

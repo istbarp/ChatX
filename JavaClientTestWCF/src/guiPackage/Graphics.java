@@ -39,17 +39,17 @@ public class Graphics {
 						
 					}
 					
-					String[] rooms = proxy.getRooms();
+					//String[] rooms = proxy.getRooms();
 
-					room = (String) JOptionPane.showInputDialog(new JFrame(),
-				            "What room you want to join?",
-				            "Rooms", JOptionPane.QUESTION_MESSAGE,
-				            null, rooms,"A");
+					//room = (String) JOptionPane.showInputDialog(new JFrame(),
+				    //        "What room you want to join?",
+				    //        "Rooms", JOptionPane.QUESTION_MESSAGE,
+				    //        null, rooms,"A");
 					
-					while(room == "")
-					{
+					//while(room == "")
+					//{
 						
-					}
+					//}
 					
 					list.add("Login Successful");
 					
