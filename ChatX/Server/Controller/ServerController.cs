@@ -74,12 +74,28 @@ namespace Server.Controller
 
         private void ReleaseUsername(string command)
         {
-            throw new NotImplementedException();
+            string id;
+            string userName;
+            string okOrError;
+
+            string[] cmd_parts = command.Split(Config.SEPERATOR);
+
+            id = cmd_parts[0];
+            userName = cmd_parts[1];
+            okOrError = cmd_parts[2];
         }
 
         private void VerifyAndLockUsername(string command)
         {
-            throw new NotImplementedException();
+            string id;
+            string userName;
+
+            string[] cmd_parts = command.Split(Config.SEPERATOR);
+
+            string response;
+
+            id = cmd_parts[0];
+            userName = cmd_parts[1];
         }
 
         private void LoginRequest(string command)
@@ -125,22 +141,53 @@ namespace Server.Controller
 
         private void RequestRooms(string command)
         {
-            throw new NotImplementedException();
+            string id;
+
+            string[] cmd_parts = command.Split(Config.SEPERATOR);
+
+            id = cmd_parts[0];
         }
 
         private void SendMessage(string command)
         {
-            throw new NotImplementedException();
+            string id;
+            string userName;
+            string roomName;
+            string message;
+
+            string[] cmd_parts = command.Split(Config.SEPERATOR);
+
+            id = cmd_parts[0];
+            userName = cmd_parts[1];
+            roomName = cmd_parts[2];
+            message = cmd_parts[3];
         }
 
         private void LeaveRoom(string command)
         {
-            throw new NotImplementedException();
+            string id;
+            string userName;
+            string roomName;
+
+            string[] cmd_parts = command.Split(Config.SEPERATOR);
+
+            id = cmd_parts[0];
+            userName = cmd_parts[1];
+            roomName = cmd_parts[2];
         }
 
         private void JoinRoom(string command)
         {
-            throw new NotImplementedException();
+            string id;
+            string userName;
+            string roomName;
+
+            string[] cmd_parts = command.Split(Config.SEPERATOR);
+
+            id = cmd_parts[0];
+            userName = cmd_parts[1];
+            roomName = cmd_parts[2];
+
         }
 
         public void StopServer()

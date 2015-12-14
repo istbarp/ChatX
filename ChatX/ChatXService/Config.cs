@@ -134,7 +134,7 @@ namespace ChatXService
             /// Verify and lock username
             /// <para> Parameters: </para>
             /// <para> {0} = requesting Thread ID  </para>
-            /// <para> {1} = username    </para>
+            /// <para> {1} = username </para>
             /// </summary>
             [DataMember]
             public static readonly int VAL_USERNAME = 9;
