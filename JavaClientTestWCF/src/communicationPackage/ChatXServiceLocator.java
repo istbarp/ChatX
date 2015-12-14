@@ -22,7 +22,7 @@ public class ChatXServiceLocator extends org.apache.axis.client.Service implemen
     }
 
     // Use to get a proxy class for BasicHttpBinding_IChatXService
-    private java.lang.String BasicHttpBinding_IChatXService_address = "http://localhost:5984/ChatXService.svc";
+    private java.lang.String BasicHttpBinding_IChatXService_address = "http://10.28.51.86:8984/ChatXService/";
 
     public java.lang.String getBasicHttpBinding_IChatXServiceAddress() {
         return BasicHttpBinding_IChatXService_address;

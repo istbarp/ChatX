@@ -1,19 +1,11 @@
 package guiPackage;
 
-import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
-import java.awt.GridLayout;
-
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextArea;
 import java.awt.List;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.security.auth.login.LoginContext;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -24,7 +16,11 @@ public class Graphics {
 
 	private JFrame frame;
 	private JTextField textField;
-	private static String usernameStatic = "";
+	static String usernameStatic = "";
+	static String room = "";
+	static boolean roomChosed = false;
+	static IChatXServiceProxy proxy = new IChatXServiceProxy();
+	public static List list;
 
 	/**
 	 * Launch the application.
@@ -32,11 +28,40 @@ public class Graphics {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
+				try {			
+					
 					Graphics window = new Graphics();
-					window.frame.setVisible(true);
+					
 					usernameStatic = JOptionPane.showInputDialog(new JFrame(),
 	                        "What is your name?", null);
+					while(usernameStatic == "")
+					{
+						
+					}
+					
+					//String[] rooms = proxy.getRooms();
+
+					//room = (String) JOptionPane.showInputDialog(new JFrame(),
+				    //        "What room you want to join?",
+				    //        "Rooms", JOptionPane.QUESTION_MESSAGE,
+				    //        null, rooms,"A");
+					
+					//while(room == "")
+					//{
+						
+					//}
+					
+					list.add("Login Successful");
+					
+					String socketInfo = proxy.login(usernameStatic);
+					String[] socketInfoArray = socketInfo.split(":");
+					Socket runningSocket = new Socket(socketInfoArray[0], Integer.parseInt(socketInfoArray[1]));
+					Thread t = new Thread(runningSocket);
+					t.start();
+					
+					window.frame.setVisible(true);
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -60,7 +85,7 @@ public class Graphics {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		List list = new List();
+		list = new List();
 		list.setBounds(10, 10, 293, 344);
 		frame.getContentPane().add(list);
 		
@@ -72,8 +97,7 @@ public class Graphics {
 		JButton btnNewButton = new JButton("Send message");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				
-				list.add(usernameStatic + ": " + textField.getText());
-				IChatXServiceProxy proxy = new IChatXServiceProxy();
+				list.add(usernameStatic + ": " + textField.getText());				
 				try {
 					proxy.sendMessage(usernameStatic, "test", textField.getText());
 				} catch (RemoteException e) {
@@ -84,5 +108,10 @@ public class Graphics {
 		});
 		btnNewButton.setBounds(196, 360, 107, 23);
 		frame.getContentPane().add(btnNewButton);
-	}	
+	}
+	
+	public static void addToListGUI(String message)
+	{
+		list.add(message);
+	}
 }

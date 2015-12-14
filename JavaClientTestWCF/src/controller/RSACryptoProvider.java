@@ -1,4 +1,4 @@
-package rsa;
+package controller;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -34,14 +34,6 @@ public class RSACryptoProvider
 	private final String CIPHERALGORITHM = "RSA/ECB/PKCS1Padding";
 	private final String PATH = "C:/keys.bin";
 	
-	public RSACryptoProvider(String publickeymod, String publickeyexp) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException
-	{		
-		KeyFactory fact = KeyFactory.getInstance(ALGORITHM);
-		RSAPublicKeySpec pub = new RSAPublicKeySpec(new BigInteger(Base64.getDecoder().decode(publickeymod)), new BigInteger(Base64.getDecoder().decode(publickeyexp)));
-
-		PublicKey = fact.generatePublic(pub);
-	}
-	
 	public RSACryptoProvider() throws NoSuchAlgorithmException, InvalidKeySpecException, IOException
 	{
 		if (!(new File(PATH).exists()))
@@ -73,10 +65,8 @@ public class RSACryptoProvider
 		return cipher.doFinal(text.getBytes());
 	}
 	
-	public String Decrypt(byte[] text)throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+	public String Decrypt(byte[] text)throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException 
 	{
-		if (PrivateKey == null)
-			throw new NullPointerException();
 		Cipher ciph = Cipher.getInstance(CIPHERALGORITHM);
 		ciph.init(Cipher.DECRYPT_MODE, PrivateKey);
 		return new String(ciph.doFinal(text));
