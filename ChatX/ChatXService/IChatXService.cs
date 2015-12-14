@@ -63,8 +63,5 @@ namespace ChatXService
         /// <returns>A string with the format [ip]:[port]. NOTE this IP can be IPv4 or IPv6</returns>
         [OperationContract]
         string Login(string username);
-
-        [OperationContract]
-        Config GetConfig();
     }
 }

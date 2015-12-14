@@ -10,7 +10,6 @@ using System.Threading;
 
 namespace ChatXService
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
     public class ChatXService : IChatXService
     {
@@ -45,7 +44,7 @@ namespace ChatXService
                 }
             };
 
-            Wait(hasResponded);
+            Wait(ref hasResponded);
 
             mqDriver.SendCommand(command);
         }
@@ -79,7 +78,7 @@ namespace ChatXService
                 }
             };
 
-            Wait(hasResponded);
+            Wait(ref hasResponded);
 
             mqDriver.SendCommand(command);
         }
@@ -123,7 +122,7 @@ namespace ChatXService
                 }
             };
 
-            Wait(aServerHasResponded);
+            Wait(ref aServerHasResponded);
 
             return rooms.ToArray();
         }
@@ -136,6 +135,8 @@ namespace ChatXService
         public string Login(string username)
         {
             IMQDriver mqDriver = GetMQDriver();
+            LockUsername(username, mqDriver);
+
             string command = Config.GenerateCommand(Config.CMD.LOGIN_REQUEST, Thread.CurrentThread.ManagedThreadId, username);
             
             bool serverResponded = false;
@@ -161,9 +162,48 @@ namespace ChatXService
                 }
             };
 
-            Wait(serverResponded);
+            Wait(ref serverResponded);
+
+            ReleaseUsername(username, mqDriver);
 
             return GetServerDestributor().RequestServer();
+        }
+
+        private void LockUsername(string username, IMQDriver mqDriver)
+        {
+            string command = Config.GenerateCommand(Config.CMD.VAL_USERNAME, Thread.CurrentThread.ManagedThreadId, username);
+
+            bool usernameLocked = false;
+
+            mqDriver.OnResponseRecieved += (cmd) =>
+            {
+                string cmdType = GetCmdType(Config.CMD.VAL_USERNAME_REPONSE);
+                string[] cmdParts = cmd.Split(Config.SEPERATOR);
+
+                if (cmdParts[0].Equals(cmdType))
+                {
+                    if (cmdParts[1].Equals(Thread.CurrentThread.ManagedThreadId))
+                    {
+                        if (cmdParts[2].ToUpper().Equals("OK"))
+                        {
+                            usernameLocked = true;
+                        }
+                        else
+                        {
+                            throw new FaultException(cmd);
+                        }
+                    }
+                }
+            };
+
+            Wait(ref usernameLocked);
+        }
+
+        private void ReleaseUsername(string username, IMQDriver mqDriver)
+        {
+            string command = Config.GenerateCommand(Config.CMD.RELEASE_USERNAME, Thread.CurrentThread.ManagedThreadId, username);
+            mqDriver.SendCommand(command);
+
         }
 
         private IServerDestributer GetServerDestributor()
@@ -182,7 +222,7 @@ namespace ChatXService
             return Config.CMD_FORMATS[cmd].Split(Config.SEPERATOR)[0];
         }
 
-        private void Wait(bool b)
+        private void Wait(ref bool b)
         {
             int waitedTime = 0;
             while (!b && waitedTime < MAX_SLEEP_TIME)
@@ -190,13 +230,6 @@ namespace ChatXService
                 Thread.Sleep(500);
                 waitedTime += 500;
             }
-        }
-
-
-        public Config GetConfig()
-        {
-            //this is just to get some configuration to the servers...
-            return new Config();
         }
     }
 }
