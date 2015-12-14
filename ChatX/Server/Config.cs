@@ -41,7 +41,7 @@ namespace Server
             //{0} = calling Thread ID,     {1} = username
             "VAL_USERNAME" + SEPERATOR + "{0}" + SEPERATOR + "{1}",
             
-             //{0} = requesting Thread ID,  {1} = OK | [ERROR]
+             //{0} = requesting Thread ID,  {1} = OK | EXISTS | [ERROR]
             "VAL_USERNAME_REPONSE" + SEPERATOR + "{0}" + SEPERATOR + "{1}",         
 
             //{0} = calling Thread ID,     {1} = username,    {2} = OK | [ERROR]
@@ -128,7 +128,7 @@ namespace Server
             /// Verify and lock username
             /// <para> Parameters: </para>
             /// <para> {0} = requesting Thread ID  </para>
-            /// <para> {1} = OK | [ERROR]    </para>
+            /// <para> {1} = OK | EXISTS | [ERROR]    </para>
             /// </summary>
             public static readonly int VAL_USERNAME_REPONSE = 10;
 

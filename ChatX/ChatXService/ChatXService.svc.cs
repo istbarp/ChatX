@@ -141,6 +141,7 @@ namespace ChatXService
 
             string reqServer = serverDist.RequestServer();
             IMQDriver mqDriver = serverDist.GetMQDriver(reqServer);
+            
             LockUsername(username, mqDriver);
 
             //TODO make mqDriver into single server mqDriver
@@ -181,7 +182,6 @@ namespace ChatXService
             string command = Config.GenerateCommand(Config.CMD.VAL_USERNAME, Thread.CurrentThread.ManagedThreadId, username);
 
             bool usernameLocked = false;
-
             mqDriver.OnResponseRecieved += (cmd) =>
             {
                 string cmdType = GetCmdType(Config.CMD.VAL_USERNAME_REPONSE);
@@ -229,6 +229,10 @@ namespace ChatXService
             return Config.CMD_FORMATS[cmd].Split(Config.SEPERATOR)[0];
         }
 
+        /// <summary>
+        /// Waits as long as <paramref name="b"/> is false, or until aprox. MAX_SLEEP_TIME ms has passed
+        /// </summary>
+        /// <param name="b">The bool to wait on</param>
         private void Wait(ref bool b)
         {
             int waitedTime = 0;
