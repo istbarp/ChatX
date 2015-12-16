@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+
+\bibitem{RSA}
+A.~Shamir R.L.~Rivest and L.~Adleman.
+\newblock A method for obtaining digital signatures and public-key
+  cryptosystems, April 4, 1977.
+
+\bibitem{PADDING}
+www.di mgt.com.au.
+\newblock Using padding in encryption.
+\newblock http://www.di-mgt.com.au/cryptopad.html.
+
+\end{thebibliography}
