@@ -31,11 +31,11 @@ The web client will be what caters to most people since it's a thing that can be
 
 \section{Cryptography}
 
-To make the communication secure the clients implements an RSA encryption to encrypt all messages sent. RSA is a Public- Private key (asymmetric) encryption algorithm. RSA encryption was . RSA encryption is a standard for encrypting and is practically impossible to decode due to prime factorization. The general idea is that it is easy to find the product of two large primes, but it is hard to factor a large product and find the primes.
+To make the communication secure the clients implements an RSA encryption to encrypt all messages sent. RSA is a Public- Private key (asymmetric) encryption algorithm. RSA encryption is a standard for encrypting and is practically impossible to decode due to prime factorization. The general idea is that it is easy to find the product of two large primes, but it is hard to factor a large product and find the primes.
 
 RSA was originally made by Ronald Linn Rivest along with Adi Shamir and Len Adlemanand published in their paper A Method for Obtaining Digital Signatures and Public-Key Cryptosystems\cite{RSA}.
 
-To be able to apply RSA encryption we need 6 variables, $d$, $e$, $n$, $p$, $q$ and $\varphi$(phi). $d$, $p$, $q$ and $\varphi$(phi) should be kept secret at all time to keep this encryption secure. Let $p$ and $q$ be a prime number, lets for simplicity say $p=7$ and $q=13$. In practice these 2 numbers would be larger depending on the numbers of bits used for encryption. $n$ is defined as in equation \ref{RSA:n}.
+To be able to apply RSA encryption, 6 variables are needed; $d$, $e$, $n$, $p$, $q$ and $\varphi$(phi). $d$, $p$, $q$ and $\varphi$(phi) should be kept secret at all time to keep this encryption secure. Let $p$ and $q$ be a prime number, lets for simplicity say $p=7$ and $q=13$. In practice these 2 numbers would be larger depending on the numbers of bits used for encryption. $n$ is defined as in equation \ref{RSA:n}.
 
 \begin{equation}
 n = p \times q
@@ -78,7 +78,7 @@ M=C^d \textrm{ mod } n
 \label{RSA:Decrypt}
 \end{equation}
 
-In the computer world when encrypting data , a padding is often used. Padding is often used to fill out byte blocks. For instance, if the message "Hi!" we would had the byte block [48 69 21]. This block size is only of 3 bytes, but the encryption algorithm might read a block of 8 at a time which would mean the block needs 5 more bytes. There is multiple way of padding a message, such as zero-padding [48 69 21 00 00 00 00 00], padding with the same value as the number of bytes [48 69 21 05 05 05 05 05]\cite{PADDING}. When the padding is done a block can be sent to the encryption algorithm to produce the cipher text.
+In the computer world when encrypting data, a padding is often used. Padding is often used to fill out byte blocks. For instance, if the message "Hi!" would had the byte block [48 69 21]. This block size is only of 3 bytes, but the encryption algorithm might read a block of 8 at a time which would mean the block needs 5 more bytes. There is multiple way of padding a message, such as zero-padding [48 69 21 00 00 00 00 00], padding with the same value as the number of bytes [48 69 21 05 05 05 05 05]\cite{PADDING}. When the padding is done a block can be sent to the encryption algorithm to produce the cipher text.
 
 \section{Server}
 
