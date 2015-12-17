@@ -1,15 +1,19 @@
 \chapter{Conclusion}
 
-ChatX have been a very design heavy system where a lot of thoughts went into how the system should be designed.
+The purpose of this project was to make a system, which integrates different technologies. In the process of developing this system, the design went through a lot of phases, each making the system more flexible and scalable. Even though scalability is not a focus point of this project, making the system scalable has helped making different "moving parts" interchangeable, thereby making integration with other systems possible in the future.  
+
+New technologies have been researched, mainly RabbitMQ and RSA encryption. RabbitMQ is what makes the servers scalable through copying, and it also opens up doors for further integration of systems with and by ChatX. A lot of work has gone into the RSA encryption, and encryption in general, but because so much time went with designing and redesigning the system, the encryption was never implemented. 
+
+%ChatX have been a very design heavy system where a lot of thoughts went into how the system should be designed.
 
 \section{Future Work}
 
-There were a larger amount of features that did not get implemented due to the scale of the project, but it is possible to extend the system with these features in the future a minimal changes and additions to the current system.
+There was a larger amount of features which did not get implemented due to the scale of the project, but it is possible to extend the system with these features in the future with minimal changes and additions to the current system.
 
-A client solution that was suggested was a web client which would be accessible by a web browser and would also be the client which would require the largest changes as a web client can not yet fully use sockets in the way the system currently works. Instead there the web client could run in a loop requesting the webservice for new messages. Additional SSL would need to be implemented to make the solution secure and encrypted.
+One possible addition to the system would be another client, e.g. a web client. This has not been a high priority, as the current solution requires a socket connection which is difficult to implement in standard HTML. Furthermore, the integration of the used technologies proved to be more difficult and time consuming than anticipated. Lastly, SSL would need to be implemented to make the solution secure and encrypted.
+ 
+Voice over IP(VoIP) and video chat was another technology that was considered to be implemented. A few changes could make this possible on the current clients, but for a web client either a plugin and/or a cloud service would be necessary. 
 
-Voice over IP(VoIP) and video chat was an other technology that was considered to be implemented. A few changes could make this possible on the current clients, but for a web client either a plug-in and/or a cloud services would be necessary. 
+A thought was also at the client side to be able to embed e.g. instance media, such as videos and images directly into the chat and make it possible to view without opening external tools or programs.
 
-A though was also at the client side to be able to embed, for instance medias, such as videos and images directly into the chat and make it possible for to view without opening external tools or programs.
-
-Lastly an idea was to make a multi platform encryption system, but making such system fell, out of the scope of the course but could have simplified some of the work, as some systems does not comunicate well with each other.
+Lastly an idea was to make a multi platform encryption system. Such a system could have simplified some of the work, as some systems does not communicate well with each other, but making such system fell out of scope of the course.
