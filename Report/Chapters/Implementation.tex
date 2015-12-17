@@ -19,11 +19,12 @@ Curly brackets are to be in their own lines at all times.
 Method names must start with a capital letter.
 
 \section{Client}
-The "Client" is what the person at home will use to use the chat system. There will be two different clients to cater to as many as possible.
+The client is what the person at home will use to use the chat system. The client is written in Java to make sure that the most amount of people would be able to run it. Java is not the fastest programming langauge, but is able to run on pretty much anything since it runs in an emulator and is not platform specific.
 
-\subsection{Java Client}
+Since the server hosts a WCF service, a lot of code can be auto-generated using the eclipse web-service client which looks at the meta-data found in the XML sheet that the WCF service provides. When thats done everything else is just graphics related and how we want the user experience to be. Since the client side does not hold a lot of code, it is small in terms of download size, and will be easily accessible for everyone.
 
-The java client has been written as the first client and will be used as the test client as it is possible to have a console application.
+In terms of use there will be a couple of dialogs to begin with, to make sure that people enter a user-name and selects a room. When that is done people can then use the textbox to chat. This is not the final graphical layout, since it has a lot of issues in terms of user friendliness, but a premature version to check if everything is working.
+
 
 \subsection{Web Client}
 

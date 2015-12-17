@@ -42,3 +42,14 @@ ChatX's architecture will be a client-server architecture. The client will call 
 \end{figure}
 
 The domain model consists of four classes. The user class is where users are identified and if they are regular users or administrative users, a user can only be in one lobby at a time but a lobby can have multiple users. A user can also send none to many messages. The message class is used for sending messages between users, a user can have none to many messages, whilst a message can only belong to one user. The lobby is where all users start. From the lobby a user can create a room and choose which users are to be included in it, Or join a room. The room class inherits the functionality of the lobby class.
+
+\subsection{Communicationdiagram}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\linewidth]{img/Communicationdiagram}
+\caption[Communication-diagram]{Communication-diagram}
+\label{fig:Communicationdiagram}
+\end{figure}
+
+As seen in the diagram above, figure \ref{fig:Communicationdiagram}, the client asks for information at the service. The service then communicates with the queue system, in this case RabbitMQ, that then communicates with the server. The server always listens to queues, and as soon as a new message is in the commandqueue, which is the implemented way of saying has not been dealt with yet, then it sends the messages out to those people who is in the room using the socket connection thats open constantly from the server to the client.
