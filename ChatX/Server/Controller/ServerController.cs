@@ -20,8 +20,6 @@ namespace Server.Controller
 
         private Room lobby;
 
-        private readonly string RES_Q_NAME = "Reponse Queue";
-
         private ServerController()
         {
             allRooms = new List<Room>();
@@ -46,7 +44,7 @@ namespace Server.Controller
 
         public void StartServer(string localHostIP, string serviceIP)
         {
-            queueManager = new ServerRabbitMQ(localHostIP, RES_Q_NAME, serviceIP);
+            queueManager = new ServerRabbitMQ(localHostIP, serviceIP);
 
             queueManager.OnCommandReceive += queueManager_OnCommandReceive;
 
@@ -268,7 +266,9 @@ namespace Server.Controller
 
         public void StopServer()
         {
+            queueManager.StopListening();
             queueManager = null;
         }
+
     }
 }

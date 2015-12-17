@@ -5,6 +5,7 @@ using System.Web;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
+using System.Threading;
 
 namespace ChatXService
 {
@@ -27,41 +28,55 @@ namespace ChatXService
             factory.Password = password;
             factory.VirtualHost = virtualHost;
              */
-
+            ListenerOpen = false;
             SetupQRespListener(factory);
 
             //make sure OnResponseRecieved is not empty
             OnResponseRecieved += (cmd) => { };
         }
 
+        public bool ListenerOpen { get; set; }
+
         private void SetupQRespListener(ConnectionFactory factory)
         {
-            using (var connection = factory.CreateConnection())
+            ListenerOpen = true;
+            Thread responseThread = new Thread(() =>
             {
-                using (var channel = connection.CreateModel())
+                using (var connection = factory.CreateConnection())
                 {
-                    channel.QueueDeclare(queue: Q_RESP,
-                                         durable: true,
-                                         exclusive: false,
-                                         autoDelete: false,
-                                         arguments: null);
-
-                    var consumer = new EventingBasicConsumer(channel);
-                    consumer.Received += (model, ea) =>
+                    using (var channel = connection.CreateModel())
                     {
+                        channel.QueueDeclare(queue: Q_RESP,
+                                             durable: true,
+                                             exclusive: false,
+                                             autoDelete: false,
+                                             arguments: null);
+
+                        var consumer = new EventingBasicConsumer(channel);
+                        consumer.Received += (model, ea) =>
+                        {
 
 
-                        var body = ea.Body;
-                        var message = Q_MSQ_ENC.GetString(body);
+                            var body = ea.Body;
+                            var message = Q_MSQ_ENC.GetString(body);
 
-                        OnResponseRecieved(message);
-                    };
+                            OnResponseRecieved(message);
+                        };
 
-                    channel.BasicConsume(queue: Q_RESP,
-                                         noAck: true,
-                                         consumer: consumer);
+                        channel.BasicConsume(queue: Q_RESP,
+                                             noAck: true,
+                                             consumer: consumer);
+
+                        //TODO: keep connection open in a better way:
+                        while (ListenerOpen)
+                        {
+                            Thread.Sleep(500);
+                        }
+                    }
                 }
-            }
+            });
+
+            responseThread.Start();
         }
 
         public void SendCommand(string command)
