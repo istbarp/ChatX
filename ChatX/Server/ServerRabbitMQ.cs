@@ -5,32 +5,42 @@ using System.Text;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Threading;
 
 
 namespace Server
 {
     class ServerRabbitMQ : IServerMQ
     {
-        public ServerRabbitMQ(string localHostIP, string responseQueueName, string commandQueueName)
+        private readonly string RES_Q_NAME = "Reponse Queue";
+        private readonly string CMD_Q_NAME = "Command Queue";
+
+        public ServerRabbitMQ(string localHostIP, string remoteHostIP)
         {
             LocalHostIP = localHostIP;
-            ResponseQueueName = responseQueueName;
-            CommandQueueName = commandQueueName;
+            RemoteHostIP = remoteHostIP;
+            ResponseQueueName = RES_Q_NAME;
+            CommandQueueName = CMD_Q_NAME;
 
             OnCommandReceive += (msg) => { };
+
+            IsListening = false;
 
         }
 
         private readonly Encoding Q_MSG_ENC = Encoding.UTF8;
-        public string LocalHostIP { get; set; }
+        public string LocalHostIP { get; private set; }
+        public string RemoteHostIP { get; private set; }
         public string ResponseQueueName { get; private set; }
         public string CommandQueueName { get; private set; }
+        public bool IsListening { get; private set; }
 
         public event OnCommandRecieveDelegate OnCommandReceive;
 
         public void SendToResponseQueue(string response)
         {
-            ConnectionFactory factory = new ConnectionFactory() { HostName = LocalHostIP };
+            //TODO: don't initialize the factory every time a response is send
+            ConnectionFactory factory = new ConnectionFactory() { HostName =  RemoteHostIP};
             using (IConnection connection = factory.CreateConnection())
             {
                 using (IModel channel = connection.CreateModel())
@@ -51,27 +61,45 @@ namespace Server
             }
         }
 
+        public void StopListening()
+        {
+            IsListening = false;
+        }
+
         public void StartListening()
         {
-            ConnectionFactory factory = new ConnectionFactory() { HostName = LocalHostIP };
-            using (IConnection connection = factory.CreateConnection())
+            IsListening = true;
+            Thread listenThread = new Thread(() =>
             {
-                using (IModel channel = connection.CreateModel())
+                ConnectionFactory factory = new ConnectionFactory() { HostName = LocalHostIP };
+                using (IConnection connection = factory.CreateConnection())
                 {
-                    channel.QueueDeclare(queue: CommandQueueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+                    using (IModel channel = connection.CreateModel())
+                    {
+                        channel.QueueDeclare(queue: CommandQueueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
 
-                    EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
-                    consumer.Received += (model, ea) =>
+                        EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
+                        consumer.Received += (model, ea) =>
+                            {
+                                byte[] body = ea.Body;
+                                string message = Q_MSG_ENC.GetString(body);
+                                Console.WriteLine(message);
+                                OnCommandReceive(message);
+                            };
+                        channel.BasicConsume(queue: CommandQueueName,
+                                             noAck: false,
+                                             consumer: consumer);
+
+                        //TODO: find better way to keep connection open
+                        while (IsListening)
                         {
-                            byte[] body = ea.Body;
-                            string message = Q_MSG_ENC.GetString(body);
-                            OnCommandReceive(message);
-                        };
-                    channel.BasicConsume(queue: CommandQueueName,
-                                         noAck: true,
-                                         consumer: consumer);
+                            Thread.Sleep(500);
+                        }
+                    }
                 }
-            }
+            });
+
+            listenThread.Start();
         }
     }
 }

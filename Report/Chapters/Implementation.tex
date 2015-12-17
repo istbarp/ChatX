@@ -84,5 +84,10 @@ In the computer world when encrypting data, a padding is often used. Padding is 
 \section{Server}
 
 \section{Webservice}
+The webservice written in C\#, and is implemented using Windows Communication Foundation (WCF). 
+
+The function of webservice is to be a broker between the client and the server(s); whenever a client interacts with the system, be it sending a message or requesting a list of rooms, it needs to go through this service. The service will then  contact the server(s) through a queue system, currently RabbitMQ, through which the servers also sends their response. The communication can be seen in figure:
+
+
 
 \section{RabbitMQ}

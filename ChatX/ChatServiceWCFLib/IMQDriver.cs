@@ -12,5 +12,6 @@ namespace ChatXService
     {
         void SendCommand(string command);
         event CommandDelegate OnResponseRecieved;
+        bool ListenerOpen { get; set; }
     }
 }
