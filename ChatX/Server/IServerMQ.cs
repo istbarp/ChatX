@@ -13,5 +13,6 @@ namespace Server
         void SendToResponseQueue(string response);
         event OnCommandRecieveDelegate OnCommandReceive;
         void StartListening();
+        void StopListening();
     }
 }

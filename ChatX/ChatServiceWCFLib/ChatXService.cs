@@ -46,9 +46,9 @@ namespace ChatXService
                 }
             };
 
-            Wait(ref hasResponded);
-
             mqDriver.SendCommand(command);
+            Wait(ref hasResponded);
+            mqDriver.ListenerOpen = false;
         }
 
         public void LeaveRoom(string username, string roomName)
@@ -80,9 +80,9 @@ namespace ChatXService
                 }
             };
 
-            Wait(ref hasResponded);
-
             mqDriver.SendCommand(command);
+            Wait(ref hasResponded);
+            mqDriver.ListenerOpen = false;
         }
 
         public void SendMessage(string username, string roomName, string encryptedMessage)
@@ -92,6 +92,7 @@ namespace ChatXService
             string command = Config.GenerateCommand(Config.CMD.SEND_MESSAGE, Thread.CurrentThread.ManagedThreadId, username, roomName, encryptedMessage);
 
             mqDriver.SendCommand(command);
+            mqDriver.ListenerOpen = false;
         }
 
         public string[] GetRooms()
@@ -124,7 +125,9 @@ namespace ChatXService
                 }
             };
 
+            mqDriver.SendCommand(command);
             Wait(ref aServerHasResponded);
+            mqDriver.ListenerOpen = false;
 
             return rooms.ToArray();
         }
@@ -175,6 +178,8 @@ namespace ChatXService
 
             ReleaseUsername(username, mqDriver);
 
+            mqDriver.ListenerOpen = false;
+
             return GetServerDestributor().RequestServer();
         }
 
@@ -203,7 +208,7 @@ namespace ChatXService
                     }
                 }
             };
-
+            mqDriver.SendCommand(command);
             Wait(ref usernameLocked);
         }
 
