@@ -19,12 +19,10 @@ Curly brackets are to be in their own lines at all times.
 Method names must start with a capital letter.
 
 \section{Client}
-The client is what the person at home will use to use the chat system. The client is written in Java to make sure that the most amount of people would be able to run it. Java is not the fastest programming langauge, but is able to run on pretty much anything since it runs in an emulator and is not platform specific.
 
-Since the server hosts a WCF service, a lot of code can be auto-generated using the eclipse web-service client which looks at the meta-data found in the XML sheet that the WCF service provides. When thats done everything else is just graphics related and how we want the user experience to be. Since the client side does not hold a lot of code, it is small in terms of download size, and will be easily accessible for everyone.
+\subsection{Java Client}
 
-In terms of use there will be a couple of dialogs to begin with, to make sure that people enter a user-name and selects a room. When that is done people can then use the textbox to chat. This is not the final graphical layout, since it has a lot of issues in terms of user friendliness, but a premature version to check if everything is working.
-
+The java client has been written as the first client and will be used as the test client as it is possible to have a console application.
 
 \subsection{Web Client}
 
@@ -86,8 +84,30 @@ In the computer world when encrypting data, a padding is often used. Padding is 
 \section{Webservice}
 The webservice written in C\#, and is implemented using Windows Communication Foundation (WCF). 
 
-The function of webservice is to be a broker between the client and the server(s); whenever a client interacts with the system, be it sending a message or requesting a list of rooms, it needs to go through this service. The service will then  contact the server(s) through a queue system, currently RabbitMQ, through which the servers also sends their response. The communication can be seen in figure:
+The function of webservice is to be a broker between the client and the server(s); whenever a client interacts with the system, be it sending a message or requesting a list of rooms, it needs to go through this service. The service will then  contact the server(s) through a queue system, currently RabbitMQ, through which the servers also sends their response. The communication can be seen in figure \ref{fig:Communicationdiagram}.
 
+The service consists of:
+\begin{itemize}
+ \item The exposed functionality available to the clients. This is done through the usual way with an interface as the service contract, and an implementation.
 
+ \item A server distributor. The idea of this is to handle what servers are available, what their IP's are and what port-numbers the socket-connections should be created to go to. 
+ 
+ \item A message queue driver. This handles all functionality related to the messaging queue system.
+ 
+ \item A config class file. This file statically contains the formats of the actual messages send and received through the messaging queue system.
+
+\end{itemize}
+
+The first three of the above items all inherits from the interfaces IChatXService, IServerDistributor and IMQDriver respectively. The first interface is implemented, as this is common, good practice for services. The next two has interfaces to make it easier to replace the actual implementations at a later state of development and even deployment. At the moment, the implementation of the server distributor only distributes to one server, and the only messaging system implementation uses RabbitMQ. But since the implementations are coded against an interface, the only change needed to switch to another implementation is at the initialization of the object.
+Below, in figure \ref{fig:ServiceArchitecture}, the service is illustrated:
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/ServiceArchitecture}
+	\caption[Communication-diagram]{ChatX Service Architecture}
+	\label{fig:ServiceArchitecture}
+\end{figure}
+
+The lines between ChatXService, IServerDistributor and IMQDriver are dotted to illustrate the statelessness of the service.
 
 \section{RabbitMQ}

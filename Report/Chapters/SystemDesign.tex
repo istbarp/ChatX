@@ -43,11 +43,11 @@ ChatX's architecture will be a client-server architecture. The client will call 
 
 The domain model consists of four classes. The user class is where users are identified and if they are regular users or administrative users, a user can only be in one lobby at a time but a lobby can have multiple users. A user can also send none to many messages. The message class is used for sending messages between users, a user can have none to many messages, whilst a message can only belong to one user. The lobby is where all users start. From the lobby a user can create a room and choose which users are to be included in it, Or join a room. The room class inherits the functionality of the lobby class.
 
-\subsection{Communicationdiagram}
+\subsection{Communication diagram}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{img/Communicationdiagram}
+\includegraphics[width=0.7\linewidth]{img/CommunicationDiag}
 \caption[Communication-diagram]{Communication-diagram}
 \label{fig:Communicationdiagram}
 \end{figure}
