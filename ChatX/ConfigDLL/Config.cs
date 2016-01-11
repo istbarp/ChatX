@@ -44,8 +44,8 @@ namespace ConfigDLL
              //{0} = requesting Thread ID,  {1} = OK | EXISTS | [ERROR]
             "VAL_USERNAME_REPONSE" + SEPERATOR + "{0}" + SEPERATOR + "{1}",         
 
-            //{0} = calling Thread ID,     {1} = username,    {2} = OK | [ERROR]
-            "RELEASE_USERNAME" + SEPERATOR + "{0}" + SEPERATOR + "{1}" + SEPERATOR + "{2}"          
+            //{0} = calling Thread ID,     {1} = username
+            "RELEASE_USERNAME" + SEPERATOR + "{0}" + SEPERATOR + "{1}"        
         };
 
         public class CMD
