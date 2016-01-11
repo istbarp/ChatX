@@ -12,7 +12,7 @@ namespace Server
 {
     class ServerRabbitMQ : IServerMQ
     {
-        private readonly string RES_Q_NAME = "Reponse Queue";
+        private readonly string RES_Q_NAME = "Response Queue";
         private readonly string CMD_Q_NAME = "Command Queue";
 
         public ServerRabbitMQ(string localHostIP, string remoteHostIP)

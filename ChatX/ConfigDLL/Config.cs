@@ -29,8 +29,8 @@ namespace ConfigDLL
             //{0} = calling Thread ID
             "REQUEST_ROOMS" + SEPERATOR + "{0}",
             
-            //{0} = requesting Thread ID,  {n} = any number of roomNames seperated by '" + SEPERATOR + "'  
-            "REQUEST_ROOMS_RESPONSE" + SEPERATOR + "{0}" + SEPERATOR + "{n}",
+            //{0} = requesting Thread ID,  {1} = any number of roomNames seperated by '" + SEPERATOR + "'  
+            "REQUEST_ROOMS_RESPONSE" + SEPERATOR + "{0}" + SEPERATOR + "{1}",
        
             //{0} = calling Thread ID,     {1} = username     {2} = socketServerIP      {3} = clientIP
             "LOGIN_REQUEST" + SEPERATOR + "{0}" + SEPERATOR + "{1}" + SEPERATOR + "{2}" + SEPERATOR + "{3}",
@@ -150,6 +150,24 @@ namespace ConfigDLL
             command = String.Format(cmdFormat, args);
 
             return command;
+        }
+
+        public static string GenerateNArgCommand(int cmd, int nInit, params object[] args)
+        {
+            string command = "CMD_N_ERROR";
+
+            string cmdFormat = Config.CMD_FORMATS[cmd];
+
+            string expandedFormat = cmdFormat.Substring(0, cmdFormat.IndexOf("{n}"));
+            for (int n = nInit; n < args.Length; n++)
+            {
+                expandedFormat += Config.SEPERATOR + "{" + n + "}";
+            }
+
+            command = String.Format(expandedFormat, args);
+
+            return command;
+
         }
     }
 }

@@ -54,6 +54,7 @@ namespace Server.Controller
 
         void queueManager_OnCommandReceive(string command)
         {
+            Console.WriteLine("##: " + command);
             string[] cmd_parts = command.Split(Config.SEPERATOR);
 
             switch (cmd_parts[0])

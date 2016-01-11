@@ -18,8 +18,6 @@ namespace ChatXService
         private readonly Encoding Q_MSQ_ENC = Encoding.UTF8;
 
         private ConnectionFactory factory;
-        IConnection connection;
-        IModel channel;
 
         public RabbitMQDriver(string hostname, string username, string password, string virtualHost)
         {
@@ -90,10 +88,13 @@ namespace ChatXService
 
                         channel.QueueDeclare(Q_CMD, true, false, false, null);
                         channel.BasicPublish("", "Command Queue", null, msg);
-                        while (ConnectionsOpen)
+                        
+                        /*
+                         * while (ConnectionsOpen)
                         {
                             Thread.Sleep(5000);
                         }
+                         */
                     }
                 }
             });
