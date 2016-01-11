@@ -104,8 +104,10 @@ namespace ConfigDLL
 
             /// <summary>
             /// Parameters:
-            /// <para> {0} = requesting Thread ID  </para>
-            /// <para> {1} = username  </para>
+            /// <para>{0} = calling Thread ID</para>
+            /// <para>{1} = username</para>     
+            /// <para>{2} = socketServerIP</para>
+            /// <para>{3} = clientIP</para>
             /// </summary>
             public static readonly int LOGIN_REQUEST = 7;
 
@@ -135,7 +137,6 @@ namespace ConfigDLL
             /// <summary>
             /// <para> {0} = requesting Thread ID  </para>
             /// <para> {1} = username</para>
-            /// <para> {2} = OK | [ERROR]    </para>
             /// </summary>
             public static readonly int RELEASE_USERNAME = 11;
         }
