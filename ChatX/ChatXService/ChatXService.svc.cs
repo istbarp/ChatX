@@ -15,7 +15,7 @@ namespace ChatXService
     public class ChatXService : IChatXService
     {
 
-        private const int MAX_SLEEP_TIME = 30000;
+        private const int MAX_SLEEP_TIME = 5000;
 
         public void JoinRoom(string username, string roomName)
         {
@@ -48,6 +48,7 @@ namespace ChatXService
             Wait(ref hasResponded);
 
             mqDriver.SendCommand(command);
+            //mqDriver.CloseConnections();  //TODO: close connections?
         }
 
         public void LeaveRoom(string username, string roomName)
@@ -82,20 +83,23 @@ namespace ChatXService
             Wait(ref hasResponded);
 
             mqDriver.SendCommand(command);
+            //mqDriver.CloseConnections();  //TODO: close connections?
         }
 
         public void SendMessage(string username, string roomName, string encryptedMessage)
         {
             IMQDriver mqDriver = GetMQDriver();
-
+   
             string command = Config.GenerateCommand(Config.CMD.SEND_MESSAGE, Thread.CurrentThread.ManagedThreadId, username, roomName, encryptedMessage);
 
             mqDriver.SendCommand(command);
+            //mqDriver.CloseConnections();  //TODO: close connections?
         }
 
         public string[] GetRooms()
         {
             IMQDriver mqDriver = GetMQDriver();
+           
             string command = Config.GenerateCommand(Config.CMD.REQUEST_ROOMS, Thread.CurrentThread.ManagedThreadId);
 
             List<string> rooms = new List<string>();
@@ -125,6 +129,7 @@ namespace ChatXService
 
             Wait(ref aServerHasResponded);
 
+            mqDriver.CloseConnections();
             return rooms.ToArray();
         }
 
@@ -173,7 +178,7 @@ namespace ChatXService
             Wait(ref serverResponded);
 
             ReleaseUsername(username, mqDriver);
-
+            mqDriver.CloseConnections();
             return GetServerDestributor().RequestServer() + ":9966";
         }
 
@@ -210,7 +215,7 @@ namespace ChatXService
         {
             string command = Config.GenerateCommand(Config.CMD.RELEASE_USERNAME, Thread.CurrentThread.ManagedThreadId, username);
             mqDriver.SendCommand(command);
-
+            //mqDriver.CloseConnections();  //TODO: close connections?
         }
 
         private IServerDestributer GetServerDestributor()

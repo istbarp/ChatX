@@ -144,7 +144,7 @@ namespace Server.Controller
             serverIP = cmd_parts[3];
             clientIP = cmd_parts[4];
 
-            if (Dns.GetHostEntry(Dns.GetHostName()).AddressList.Contains(IPAddress.Parse(serverIP)))
+            if (Dns.GetHostEntry(Dns.GetHostName()).AddressList.Contains(IPAddress.Parse(serverIP)) || serverIP.Contains("127.0.0.1") || serverIP.Contains("localhost"))
             {
                 User user = new User(userName, clientIP);
 

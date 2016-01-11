@@ -10,6 +10,7 @@ namespace ChatXService
 
     public interface IMQDriver
     {
+        void CloseConnections();
         void SendCommand(string command);
         event CommandDelegate OnResponseRecieved;
     }
