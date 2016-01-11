@@ -211,7 +211,7 @@ namespace Server.Controller
                     IChatConnection chatCon = roomUser.ChatConnection;
                     if (chatCon != null)
                     {
-                        string chatMsg = String.Format("{0}|{1}:{2}", roomName, userName, message);
+                        string chatMsg = String.Format("{0}|{1}|{2}", roomName, userName, message);
                         chatCon.SendMessage(chatMsg);
                     }
                 }

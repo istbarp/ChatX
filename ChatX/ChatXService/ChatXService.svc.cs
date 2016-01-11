@@ -25,7 +25,7 @@ namespace ChatXService
             bool hasResponded = false;
 
             mqDriver.OnResponseRecieved += (cmd) => {
-                string[] cmdParts = cmd.Split(':');
+                string[] cmdParts = cmd.Split(Config.SEPERATOR);
                 
                 string cmdType = GetCmdType(Config.CMD.JOIN_ROOM_RESPONSE);
 
@@ -174,7 +174,7 @@ namespace ChatXService
 
             ReleaseUsername(username, mqDriver);
 
-            return GetServerDestributor().RequestServer();
+            return GetServerDestributor().RequestServer() + ":9966";
         }
 
         private void LockUsername(string username, IMQDriver mqDriver)

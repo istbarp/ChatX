@@ -28,15 +28,21 @@ namespace Server.ChatSocket
             acceptedIPs = new List<string>();
             ipToSocket = new Dictionary<string, Socket>();
 
+            //TODO: refactor
+            /*
             IPHostEntry entity = Dns.GetHostEntry(Dns.GetHostName());
 
             IPAddress ip = entity.AddressList[0];
 
             IP = ip.ToString();
             Port = PORT;
+            */
+
+            IP = "127.0.0.1";
+            Port = PORT;
 
             listener = new Socket(SocketType.Stream, ProtocolType.IP);
-            IPEndPoint endPoint = new IPEndPoint(ip, Port);
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(IP), Port);
             listener.Bind(endPoint);
 
             OnMessageSend += (msg) => { };
