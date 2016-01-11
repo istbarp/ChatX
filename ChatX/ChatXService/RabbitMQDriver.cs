@@ -72,7 +72,7 @@ namespace ChatXService
 
                     byte[] msg = Q_MSQ_ENC.GetBytes(command);
 
-                    channel.QueueDeclare(Q_CMD, false, false, false, null);
+                    channel.QueueDeclare(Q_CMD, true, false, false, null);
                     channel.BasicPublish("", "", null, msg);
                 }
             }

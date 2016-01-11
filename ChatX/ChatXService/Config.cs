@@ -152,7 +152,8 @@ namespace ChatXService
 
             /// <summary>
             /// <para> {0} = requesting Thread ID  </para>
-            /// <para> {1} = OK | [ERROR]    </para>
+            /// <para> {1} = username</para>
+            /// <para> {2} = OK | [ERROR]    </para>
             /// </summary>
             [DataMember]
             public static readonly int RELEASE_USERNAME = 11;
