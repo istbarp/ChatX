@@ -8,6 +8,7 @@ using System.Text;
 using RabbitMQ.Client;
 using System.Threading;
 using System.Web;
+using ConfigLib;
 
 namespace ChatXService
 {
