@@ -48,8 +48,8 @@ namespace ChatXService
              //{0} = requesting Thread ID,  {1} = OK | EXISTS | [ERROR]
             "VAL_USERNAME_REPONSE" + SEPERATOR + "{0}" + SEPERATOR + "{1}",         
 
-            //{0} = calling Thread ID,     {1} = username,    {2} = OK | [ERROR]
-            "RELEASE_USERNAME" + SEPERATOR + "{0}" + SEPERATOR + "{1}" + SEPERATOR + "{2}"          
+            //{0} = calling Thread ID,     {1} = username
+            "RELEASE_USERNAME" + SEPERATOR + "{0}" + SEPERATOR + "{1}"          
         };
 
         [DataContract]
@@ -153,7 +153,6 @@ namespace ChatXService
             /// <summary>
             /// <para> {0} = requesting Thread ID  </para>
             /// <para> {1} = username</para>
-            /// <para> {2} = OK | [ERROR]    </para>
             /// </summary>
             [DataMember]
             public static readonly int RELEASE_USERNAME = 11;
