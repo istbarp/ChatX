@@ -29,10 +29,13 @@ namespace ChatXService
 
         public string RequestServer()
         {
+            /*
             IPHostEntry entry = Dns.GetHostEntry(Dns.GetHostName());
 
             string retVal = String.Format("{0}:{1}", entry.AddressList[0], SERVER_PORT);
             return retVal;
+             */
+            return "127.0.0.1";
         }
 
 

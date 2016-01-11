@@ -22,9 +22,10 @@ namespace ChatXService
         {
             factory = new ConnectionFactory();
             factory.HostName = hostname;
-            factory.UserName = username;
-            factory.Password = password;
-            factory.VirtualHost = virtualHost;
+            factory.Port = 1572;
+            //factory.UserName = username;
+            //factory.Password = password;
+            //factory.VirtualHost = virtualHost;
 
             SetupQRespListener(factory);
 
