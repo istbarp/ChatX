@@ -21,10 +21,11 @@ namespace ChatXService
         public RabbitMQDriver(string hostname, string username, string password, string virtualHost)
         {
             factory = new ConnectionFactory();
-            factory.HostName = hostname;
-            factory.UserName = username;
+            factory.HostName = "localhost";// hostname;
+            /*factory.UserName = username;
             factory.Password = password;
             factory.VirtualHost = virtualHost;
+            factory.Port = 15672;*/
 
             SetupQRespListener(factory);
 
