@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Server.Model;
 using System.Net;
 using Server.ChatSocket;
-using ConfigLib;
+using ConfigDLL;
 
 namespace Server.Controller
 {

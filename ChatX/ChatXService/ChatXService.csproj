@@ -69,7 +69,6 @@
     <Compile Include="ChatXService.svc.cs">
       <DependentUpon>ChatXService.svc</DependentUpon>
     </Compile>
-    <Compile Include="Config.cs" />
     <Compile Include="IChatXService.cs" />
     <Compile Include="IMQDriver.cs" />
     <Compile Include="IServerDestributer.cs" />
@@ -91,6 +90,12 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConfigDLL\ConfigDLL.csproj">
+      <Project>{62c5c38a-9692-4dc0-9817-707153de86ad}</Project>
+      <Name>ConfigDLL</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
