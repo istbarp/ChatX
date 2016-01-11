@@ -70,6 +70,7 @@
             this.txtServiceIP.Name = "txtServiceIP";
             this.txtServiceIP.Size = new System.Drawing.Size(240, 22);
             this.txtServiceIP.TabIndex = 3;
+            this.txtServiceIP.Text = "127.0.0.1";
             // 
             // lblhost
             // 
