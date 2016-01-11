@@ -194,12 +194,13 @@ namespace Server.Controller
 
             string[] cmd_parts = command.Split(Config.SEPERATOR);
 
-            id = cmd_parts[0];
-            userName = cmd_parts[1];
-            roomName = cmd_parts[2];
+            //0 = command name
+            id = cmd_parts[1];
+            userName = cmd_parts[2];
+            roomName = cmd_parts[3];
 
-            int paramLength = userName.Length + roomName.Length + id.Length + 3;
-            message = command.Substring(0, paramLength);
+            //int paramLength = userName.Length + roomName.Length + id.Length + 3;
+            message = cmd_parts[4];
 
             User sender = allUsers[allUsers.IndexOf(new User(userName))];
 
